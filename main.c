@@ -292,6 +292,34 @@ void printShork(void)
     }
 }
 
+void showHelp(void)
+{
+    char desc[160] = "A cute, shark-themed take on Tony Monroe's cowsay command that outputs an ASCII art shark and speech bubble containing a message of your choice.\n";
+    formatNewLines(desc, TERM_SIZE.ws_col, NULL);
+    printf("%s\n", desc);
+
+    char usage[80] = "Usage: sl [OPTIONS] [MESSAGE]\n       [STDIN] | sl [OPTIONS]\n\n";
+    formatNewLines(usage, TERM_SIZE.ws_col, "       ");
+    printf("%s", usage);
+
+    char options[80] = "Options:\n-h, --help    Displays help information and exits\n\n";
+    formatNewLines(options, TERM_SIZE.ws_col, "              ");
+    printf("%s", options);
+
+    char message[250] = "Message:\nA written message for shorksay to speak. You can enter the message with or without double quotes, but including them is advised since entering text that looks like a program argument may interfere with shorksay's operation.\n\n";
+    formatNewLines(message, TERM_SIZE.ws_col, NULL);
+    printf("%s", message);
+
+    char stdin[140] = "stdin:\nA stdin-supplied message for shorksay to speak. This allows you to pipe the output of another program into shorksay.\n\n";
+    formatNewLines(stdin, TERM_SIZE.ws_col, NULL);
+    printf("%s", stdin);
+
+    char notes[80];
+    snprintf(notes, 80, "Notes:\nThe host terminal size must be %dx%d before starting.\n", SHORK_WIDTH, 11);
+    formatNewLines(notes, TERM_SIZE.ws_col, NULL);
+    printf("%s", notes);
+}
+
 
 
 int main(int argc, char *argv[])
@@ -312,19 +340,27 @@ int main(int argc, char *argv[])
     {
         for (int i = 1; i < argc; i++)
         {
-            size_t msgLen = strlen(message);
-            size_t wordLen = strlen(argv[i]);
-            if (i < argc - 1) wordLen += 1;
-
-            if (msgLen + wordLen + 1 > MSG_MAX)
+            if ((strcmp(argv[i], "-h") == 0) || (strcmp(argv[i], "--help") == 0))
             {
-                printf("ERROR: message exceeds maximum length (%d characters)\n", MSG_MAX);
-                free(message);
-                return 1;
+                showHelp();
+                return 0;
             }
+            else
+            {
+                size_t msgLen = strlen(message);
+                size_t wordLen = strlen(argv[i]);
+                if (i < argc - 1) wordLen += 1;
 
-            strcat(message, argv[i]);
-            if (i < argc - 1) strcat(message, " ");
+                if (msgLen + wordLen + 1 > MSG_MAX)
+                {
+                    printf("ERROR: message exceeds maximum length (%d characters)\n", MSG_MAX);
+                    free(message);
+                    return 1;
+                }
+
+                strcat(message, argv[i]);
+                if (i < argc - 1) strcat(message, " ");
+            }
         }
     }
     // Fallback to stdin-based message (e.g. using a pipe)
@@ -358,9 +394,9 @@ int main(int argc, char *argv[])
             message[msgLen - 1] = '\0';
     }
 
-    if (TERM_SIZE.ws_col < SHORK_WIDTH - 1 || TERM_SIZE.ws_row < 11)
+    if (TERM_SIZE.ws_col < SHORK_WIDTH || TERM_SIZE.ws_row < 11)
     {
-        printf("ERROR: terminal size too small (must be %dx%d or more)\n", SHORK_WIDTH + 5, 11);
+        printf("ERROR: terminal size too small (must be %dx%d or more)\n", SHORK_WIDTH, 11);
         free(message);
         return 1;
     }
