@@ -198,32 +198,32 @@ struct winsize getTerminalSize(void)
 
 void printMessage(char *msg)
 {
-    int lines = formatNewLines(msg, SHORK_WIDTH - 4, NULL);
+    int lines = formatNewLines(msg, SHORK_WIDTH - 5, NULL);
     size_t msgLen = strlen(msg);
 
     if (lines == 1)
     {
-        int padding = SHORK_WIDTH - 5 - msgLen;
+        int padding = SHORK_WIDTH - 6 - msgLen;
 
         // Print top border
-        for (int i = -1; i < padding; i++) printf(" ");
+        for (int i = -1; i < padding + 1; i++) printf(" ");
         for (int i = 0; i < msgLen + 2; i++) printf("-");
         printf("\n");
 
         // Print message
-        for (int i = 0; i < padding; i++) printf(" ");
+        for (int i = 0; i < padding + 1; i++) printf(" ");
         printf("< %s >\n", msg);
 
         // Print bottom border
-        for (int i = -1; i < padding; i++) printf(" ");
+        for (int i = -1; i < padding + 1; i++) printf(" ");
         for (int i = 0; i < msgLen + 2; i++) printf("-");
         printf("\n");
     }
     else
     {
         // Print top border
-        printf(" ");
-        for (int i = 0; i < SHORK_WIDTH - 3; i++)
+        printf("  ");
+        for (int i = 0; i < SHORK_WIDTH - 4; i++)
             printf("-");
         printf("\n");
 
@@ -248,12 +248,12 @@ void printMessage(char *msg)
                 currPos += len;
             }
 
-            if (i == 0) printf("/ ");
-            else if (i == lines - 1) printf("\\ ");
-            else printf("| ");
+            if (i == 0) printf(" / ");
+            else if (i == lines - 1) printf(" \\ ");
+            else printf(" | ");
 
             printf("%.*s", len, lineStart);
-            for (int j = len; j < SHORK_WIDTH - 5; j++) printf(" ");
+            for (int j = len; j < SHORK_WIDTH - 6; j++) printf(" ");
 
             if (i == 0) printf(" \\\n");
             else if (i == lines - 1) printf(" /\n");
@@ -261,8 +261,8 @@ void printMessage(char *msg)
         }
 
         // Print bottom border
-        printf(" ");
-        for (int i = 0; i < SHORK_WIDTH - 3; i++)
+        printf("  ");
+        for (int i = 0; i < SHORK_WIDTH - 4; i++)
             printf("-");
         printf("\n");
     }
@@ -352,7 +352,7 @@ int main(int argc, char *argv[])
     cleanStr(message);
     if (likelyPiped && strstr(message, "-- "))
     {
-        char *replaced = findReplace(message, MSG_MAX, " -- ", "\n -- ");
+        char *replaced = findReplace(message, MSG_MAX, " -- ", "\n-- ");
         if (replaced != NULL)
         {
             if (replaced != message) free(message);
