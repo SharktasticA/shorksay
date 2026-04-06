@@ -41,7 +41,8 @@ static struct winsize TERM_SIZE;
 
 
 /**
- * Removes duplicate consecutive spaces and newlines.
+ * Removes ASCII escape codes and duplicate consecutive spaces and newlines from
+ * a given string.
  * @param str Input string
  */
 void cleanStr(char *str)
@@ -52,23 +53,38 @@ void cleanStr(char *str)
 
     while (str[readI] != '\0')
     {
+        // Remove ASCII escape codes
+        if (str[readI] == '\033' && str[readI + 1] == '[')
+        {
+            readI += 2;
+            while (str[readI] != '\0')
+            {
+                char c = str[readI];
+                if (c >= 0x40 && c <= 0x7E)
+                {
+                    readI++;
+                    break;
+                }
+                readI++;
+            }
+        }
         // Begin to operate if space, tab or newline found
-        if (str[readI] == ' ' || str[readI] == '\t' || str[readI] == '\n')
+        else if (str[readI] == ' ' || str[readI] == '\t' || str[readI] == '\n')
         {
             if (!inWhitespace)
             {
                 str[writeI++] = ' ';
                 inWhitespace = 1;
             }
+            readI++;
         }
         // Just copy normally
         else
         {
             str[writeI++] = str[readI];
             inWhitespace = 0;
+            readI++;
         }
-
-        readI++;
     }
 
     // Remove trailing spaces if present
