@@ -2,6 +2,8 @@
 
 My cute, shark-based take on [cowsay](https://github.com/cowsay-org/cowsay) by Tony Monroe and later maintained by Andrew Janke. shorksay outputs an ASCII art shark and speech bubble containing a message of your choice. shorksay pays homage to the original, but thematically made for SHORK Operating Systems like [SHORK 486](https://github.com/SharktasticA/SHORK-486). It also works on modern Linux distributions just fine.
 
+<p align="center"><img alt="A screenshot of shorksay piped with the date command's output and shorksay with a custom message reading 'Hello, this is a test of the very cute SHORKSAY! :3 A fun homage to cowsay, I hope you enjoy it!'" src="screenshot.png"></p>
+
 
 
 ## Building
