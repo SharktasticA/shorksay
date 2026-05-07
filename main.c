@@ -298,7 +298,7 @@ void showHelp(void)
     formatNewLines(desc, TERM_SIZE.ws_col, NULL);
     printf("%s\n", desc);
 
-    char usage[80] = "Usage: sl [OPTIONS] [MESSAGE]\n       [STDIN] | sl [OPTIONS]\n\n";
+    char usage[100] = "Usage: shorksay [OPTIONS] [MESSAGE]\n       [STDIN] | shorksay [OPTIONS]\n\n";
     formatNewLines(usage, TERM_SIZE.ws_col, "       ");
     printf("%s", usage);
 
